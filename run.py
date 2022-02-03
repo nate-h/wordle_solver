@@ -1,12 +1,8 @@
-import pdb
-from english_words import english_words_lower_alpha_set
+import json
 import os
 import time
 import random
 
-"""Lessons
-f-strings, replaceable hint function, filtering
-"""
 
 class WordleSolver:
     """Plan
@@ -21,7 +17,8 @@ class WordleSolver:
     def __init__(self):
         self.modes = ["wordle", "clear"]
         self.mode = self.modes[0]
-        self.full_dict = [w for w in english_words_lower_alpha_set if len(w) == 5]
+        with open("five_letter_words.json") as json_file:
+            self.full_dict = set(json.load(json_file))
         self.max_guesses = 6
         self.reset()
         self.play()
@@ -32,10 +29,11 @@ class WordleSolver:
         self.outputs = []
 
     def play(self):
+        """Play wordle as a command line game."""
 
         #word = random.choice(tuple(self.full_dict))
-        self.reset()
         word = "those"
+        self.reset()
 
         while True:
             self.clear_screen()
@@ -64,7 +62,8 @@ class WordleSolver:
                 self.lose_message(word)
                 self.play()
 
-    def validate_guess(self, guess: str):
+    def validate_guess(self, guess: str) -> bool:
+        """Ensure guess is a valid 5 letter word."""
         guess = guess.lower()
         if len(guess) != 5:
             print("Incorrect Length. Guess again!")
@@ -77,7 +76,13 @@ class WordleSolver:
             return False
         return True
 
-    def generate_comparison(self, word: str, guess: str):
+    def generate_comparison(self, word: str, guess: str) -> str:
+        """Returns 5 character string representing the comparison between the
+        word and guess. Characters that are in the right position will be
+        marked with a "c". Characters in the wrong position but present in the
+        word will be marked with an "i". Characters not in the final string
+        will be marked with a "_".
+        """
         ret = []
         for i, g in enumerate(guess):
             if g == word[i]:
@@ -90,7 +95,7 @@ class WordleSolver:
 
 
     def clear_screen(self):
-        # Clear screen.
+        """Clear screen. OS type dictates system call so this checks for that."""
         os.system('cls' if os.name == 'nt' else 'clear')
 
     def help(self):
@@ -103,21 +108,27 @@ class WordleSolver:
         return self.dict[0]
 
     def win_message(self, word: str):
+        """Clears screen and displays win message."""
         self.clear_screen()
-        print(f"DING DING DING! '{word}' is correct.")
-        print(f"You Won in {len(self.guesses)} guesses!")
-        print("---")
-        print(f"Guesses: {self.guesses}")
-        print(f"Outputs: {self.outputs}")
+        print(
+            f"DING DING DING! '{word}' is correct.\n"
+            f"You Won in {len(self.guesses)} guesses!\n"
+            "---\n"
+            f"Guesses: {self.guesses}\n"
+            f"Outputs: {self.outputs}\n"
+        )
         input("Press any key to play again.")
 
     def lose_message(self, word: str):
+        """Clears screen and displays lose message."""
         self.clear_screen()
-        print(f"WOMP WOMP! '{word}' was the word.")
-        print("You Lose!")
-        print("---")
-        print(f"Guesses: {self.guesses}")
-        print(f"Outputs: {self.outputs}")
+        print(
+            f"WOMP WOMP! '{word}' was the word.\n"
+            "You Lose!\n"
+            "---\n"
+            f"Guesses: {self.guesses}\n"
+            f"Outputs: {self.outputs}\n"
+        )
         input("Press any key to play again.")
 
 
