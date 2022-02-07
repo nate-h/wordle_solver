@@ -31,8 +31,7 @@ class WordleSolver:
     def play(self):
         """Play wordle as a command line game."""
 
-        #word = random.choice(tuple(self.full_dict))
-        word = "those"
+        word = random.choice(tuple(self.full_dict))
         self.reset()
 
         while True:
