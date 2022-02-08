@@ -4,32 +4,34 @@ from typing import Iterator, List, Set
 
 
 # Load 5 letter words.
-with open("five_letter_words.json") as json_file:
+with open("all_words.json") as json_file:
     all_words = json.load(json_file)
+with open("valid_five_letter_words.json") as json_file:
+    all_words += json.load(json_file)
 words = all_words.copy()
 dupeless_all_words = ["".join(set(w)) for w in words]
 
 
-def char_count(words: List[str], remove_chars: str=""):
+def char_count(remove_chars: str=""):
     """Count occurrence of each character and remove chars from counts."""
-    words = ["".join(set(w)) for w in words]
-    counts = Counter("".join(words))
+    dupeless_words = ["".join(set(w)) for w in words]
+    counts = Counter("".join(dupeless_words))
     for c in remove_chars:
         del counts[c]
     return counts
 
 
-def find(contains:str):
+def explore(contains:str):
     """Find words in this list that contain all letters in 'contains'."""
     return [w for w in all_words if all(c in w for c in contains)]
 
 
-def find_optimal(words: List[str], remove_chars: str, top=1) -> str:
+def find(remove_chars: str, top=1) -> str:
     """Given a list of possible words left, find the optimal word to
     guess next.
     """
     # Count occurrence of each char for remaining words.
-    counts = char_count(words, remove_chars)
+    counts = char_count(remove_chars)
 
     # Find word in all words that maximizes count of highest occurring chars.
     scores = [sum(map(lambda c: counts[c], w)) for w in dupeless_all_words]
@@ -38,7 +40,7 @@ def find_optimal(words: List[str], remove_chars: str, top=1) -> str:
     return sorted(list(zip(all_words, scores)), key=lambda x: x[1], reverse=True)[:top]
 
 
-def update(words: List[str], guess: str, outcome: str) -> Iterator[str]:
+def update(guess: str, outcome: str) -> Iterator[str]:
     """Filters a list of words give a guess and it's outcome in wordle.
 
     Parameters:
@@ -50,7 +52,6 @@ def update(words: List[str], guess: str, outcome: str) -> Iterator[str]:
             letters in the incorrect position are marked with a lowercase letter
     """
 
-    words = words.copy()
     is_out: Set[str] = set()
     constraints = set() # is_at_index, index, char
 
