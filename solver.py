@@ -1,6 +1,19 @@
+"""First pass at creating a wordle solver.
+
+It works roughly by counting the occurrence of each character in the remaining
+possible words and then finds a word from all valid words that maximizes the most
+frequent characters. When the list of possible words left is about 5, the user
+should pick one of those words. Wordle answers tend to be popular words.
+
+
+TODO: add example run usage.
+"""
 import json
 from collections import Counter
-from typing import Iterator, List, Set
+from typing import Iterator, Set, Tuple
+
+
+all_constraints: Set[Tuple[bool, int, str]] = set()
 
 
 # Load 5 letter words.
@@ -26,11 +39,12 @@ def explore(contains:str):
     return [w for w in all_words if all(c in w for c in contains)]
 
 
-def find(remove_chars: str, top=1) -> str:
+def find(top=1) -> str:
     """Given a list of possible words left, find the optimal word to
     guess next.
     """
-    # Count occurrence of each char for remaining words.
+    # Count occurrence of each undetermined char for remaining words.
+    remove_chars = set([char for _, _, char in all_constraints])
     counts = char_count(remove_chars)
 
     # Find word in all words that maximizes count of highest occurring chars.
@@ -53,8 +67,9 @@ def update(guess: str, outcome: str) -> Iterator[str]:
     """
 
     is_out: Set[str] = set()
-    constraints = set() # is_at_index, index, char
+    constraints: Set[Tuple[bool, int, str]] = set() # is_at_index, index, char
 
+    # Turns guess,outcome comparison into iterable constraints.
     for i, (g, o) in enumerate(zip(guess, outcome)):
         if o == '_':
             is_out.add(g)
@@ -62,7 +77,9 @@ def update(guess: str, outcome: str) -> Iterator[str]:
             constraints.add((True, i, g))
         else:
             constraints.add((False, i, g))
+    all_constraints.update(constraints)
 
+    # Filter all words based on constraints.
     ret_words = []
     for w in words:
         # Exclude words.
