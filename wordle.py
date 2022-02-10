@@ -17,7 +17,7 @@ class WordleSolver:
     def __init__(self):
         self.modes = ["wordle", "clear"]
         self.mode = self.modes[0]
-        with open("five_letter_words.json") as json_file:
+        with open("data/five_letter_words.json") as json_file:
             self.full_dict = set(json.load(json_file))
         self.max_guesses = 6
         self.reset()

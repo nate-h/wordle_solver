@@ -4,9 +4,9 @@ from typing import Iterator, List, Set
 
 
 # Load 5 letter words.
-with open("all_words.json") as json_file:
+with open("data/all_words.json") as json_file:
     all_words = json.load(json_file)
-with open("valid_five_letter_words.json") as json_file:
+with open("data/valid_five_letter_words.json") as json_file:
     all_words += json.load(json_file)
 words = all_words.copy()
 dupeless_all_words = ["".join(set(w)) for w in words]
