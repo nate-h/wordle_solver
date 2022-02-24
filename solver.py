@@ -39,7 +39,7 @@ def explore(contains:str):
     return [w for w in all_words if all(c in w for c in contains)]
 
 
-def find(top=1) -> str:
+def find(top=5) -> str:
     """Given a list of possible words left, find the optimal word to
     guess next.
     """
@@ -54,7 +54,7 @@ def find(top=1) -> str:
     return sorted(list(zip(all_words, scores)), key=lambda x: x[1], reverse=True)[:top]
 
 
-def update(guess: str, outcome: str) -> Iterator[str]:
+def update(guess: str, outcome: str):
     """Filters a list of words give a guess and it's outcome in wordle.
 
     Parameters:
@@ -66,6 +66,7 @@ def update(guess: str, outcome: str) -> Iterator[str]:
             letters in the incorrect position are marked with a lowercase letter
     """
 
+    global words
     is_out: Set[str] = set()
     constraints: Set[Tuple[bool, int, str]] = set() # is_at_index, index, char
 
@@ -103,4 +104,5 @@ def update(guess: str, outcome: str) -> Iterator[str]:
         if do_add:
             ret_words.append(w)
 
-    return ret_words
+    words = ret_words
+    print(f"Remaining: {len(words)}\nSample: {words[0:50]}")
