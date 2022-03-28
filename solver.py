@@ -10,7 +10,7 @@ TODO: add example run usage.
 """
 import json
 from collections import Counter
-from typing import Iterator, Set, Tuple
+from typing import Set, Tuple
 
 
 all_constraints: Set[Tuple[bool, int, str]] = set()
@@ -39,7 +39,7 @@ def explore(contains:str):
     return [w for w in all_words if all(c in w for c in contains)]
 
 
-def find(top=5) -> str:
+def f(top=5) -> str:
     """Given a list of possible words left, find the optimal word to
     guess next.
     """
@@ -54,7 +54,7 @@ def find(top=5) -> str:
     return sorted(list(zip(all_words, scores)), key=lambda x: x[1], reverse=True)[:top]
 
 
-def update(guess: str, outcome: str):
+def u(guess: str, outcome: str):
     """Filters a list of words give a guess and it's outcome in wordle.
 
     Parameters:
