@@ -9,4 +9,9 @@ This repo also contains a terminal based replica of wordle.
 
 ## Requirements
 
-Run program with python3
+Run program with python 3.11
+
+
+## Running
+
+TODO: show how to exercise each mode
