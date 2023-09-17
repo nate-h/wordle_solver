@@ -25,7 +25,7 @@ words = all_words.copy()
 dupeless_all_words = ["".join(set(w)) for w in words]
 
 
-def char_count(remove_chars: str=""):
+def char_count(remove_chars: str = ""):
     """Count occurrence of each character and remove chars from counts."""
     dupeless_words = ["".join(set(w)) for w in words]
     counts = Counter("".join(dupeless_words))
@@ -34,7 +34,7 @@ def char_count(remove_chars: str=""):
     return counts
 
 
-def explore(contains:str):
+def explore(contains: str):
     """Find words in this list that contain all letters in 'contains'."""
     return [w for w in all_words if all(c in w for c in contains)]
 
@@ -68,11 +68,11 @@ def u(guess: str, outcome: str):
 
     global words
     is_out: Set[str] = set()
-    constraints: Set[Tuple[bool, int, str]] = set() # is_at_index, index, char
+    constraints: Set[Tuple[bool, int, str]] = set()  # is_at_index, index, char
 
     # Turns guess,outcome comparison into iterable constraints.
     for i, (g, o) in enumerate(zip(guess, outcome)):
-        if o == '_':
+        if o == "_":
             is_out.add(g)
         elif o.isupper():
             constraints.add((True, i, g))
